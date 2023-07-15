@@ -1,5 +1,5 @@
 #include "rclcpp/rclcpp.hpp"
-#include "example_interfaces/srv/add_two_ints.hpp"
+#include "interfaces/srv/add_three_ints.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -7,22 +7,22 @@
 
 using namespace std::chrono_literals;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
 
-    if (argc != 3) {
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "usage: add_two_ints_client X Y");
+    if (argc != 4) {
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "usage: add_three_ints_client X Y Z");
         return 1;
     }
 
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_client");
-    rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedPtr client =
-            node->create_client<example_interfaces::srv::AddTwoInts>("add_two_ints");
+    std::shared_ptr <rclcpp::Node> node = rclcpp::Node::make_shared("add_three_ints_client");
+    rclcpp::Client<interfaces::srv::AddThreeInts>::SharedPtr client =
+            node->create_client<interfaces::srv::AddThreeInts>("add_three_ints");
 
-    auto request = std::make_shared<example_interfaces::srv::AddTwoInts::Request>();
+    auto request = std::make_shared<interfaces::srv::AddThreeInts::Request>();
     request->a = atoll(argv[1]);
     request->b = atoll(argv[2]);
+    request->c = atoll(argv[3]);
 
     while (!client->wait_for_service(1s)) {
         if (!rclcpp::ok()) {
@@ -35,11 +35,10 @@ int main(int argc, char **argv)
     auto result = client->async_send_request(request);
     // Wait for the result.
     if (rclcpp::spin_until_future_complete(node, result) ==
-        rclcpp::FutureReturnCode::SUCCESS)
-    {
+        rclcpp::FutureReturnCode::SUCCESS) {
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Sum: %ld", result.get()->sum);
     } else {
-        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service add_two_ints");
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service add_three_ints");
     }
 
     rclcpp::shutdown();

@@ -8,13 +8,13 @@ endif ()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(example_interfaces REQUIRED)
+find_package(interfaces REQUIRED)
 
 add_executable(server src/add_two_ints_server.cpp)
-ament_target_dependencies(server rclcpp example_interfaces)
+ament_target_dependencies(server rclcpp interfaces)
 
 add_executable(client src/add_two_ints_client.cpp)
-ament_target_dependencies(client rclcpp example_interfaces)
+ament_target_dependencies(client rclcpp interfaces)
 
 install(TARGETS
         server
